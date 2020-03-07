@@ -1,0 +1,34 @@
+stages:
+  - build
+  - announce
+
+.release:
+  only:
+    - tags
+  except:
+    - master
+
+build:binaries:
+  stage: build
+  extends:
+    - .release
+  image: golang:alpine
+  script:
+    - apk add -U binutils zip
+    - ci/build_binaries
+  artifacts:
+    paths:
+      - binaries/
+    expire_in: 30m
+
+announce:
+  stage: announce
+  extends:
+    - .release
+  image: python:3-alpine
+  needs:
+    - build:binaries
+  script:
+    - pip install requests
+    - apk -U add git
+    - ci/gitlab_release
