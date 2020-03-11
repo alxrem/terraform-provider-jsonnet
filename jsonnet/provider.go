@@ -35,7 +35,18 @@ type providerConfig struct {
 	args []string
 }
 
-func (pc *providerConfig) command(source string) *exec.Cmd {
+func (pc *providerConfig) command(source string, extStr, extCode, tlaStr, tlaCode map[string]interface{}) *exec.Cmd {
+	for argKey, vars := range map[string]map[string]interface{}{
+		"--ext-str":  extStr,
+		"--ext-code": extCode,
+		"--tla-str":  tlaStr,
+		"--tla-code": tlaCode,
+	} {
+		for k, v := range vars {
+			pc.args = append(pc.args, argKey, k+"="+v.(string))
+		}
+	}
+
 	cmd := exec.Command(pc.cmd, append(pc.args, source)...)
 	cmd.Env = os.Environ()
 	return cmd
