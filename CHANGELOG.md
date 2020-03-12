@@ -1,4 +1,14 @@
-## 0.2.0 (Unreleased)
+## 0.3.0 (Unreleased)
+
+## 0.2.0 (Mar 12, 2020)
+
+FEATURES:
+
+Supported external variables and top level arguments
+
+IMPROVEMENTS:
+
+Output full stderr on failure of the command
 
 ## 0.1.0 (Mar 10, 2020)
 
