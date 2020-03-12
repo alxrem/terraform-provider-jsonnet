@@ -63,8 +63,7 @@ func configureProvider(d *schema.ResourceData) (interface{}, error) {
 	jsonnetPath := d.Get("jsonnet_path").([]interface{})
 	args := make([]string, 0)
 	for _, path := range jsonnetPath {
-		args = append(args, "-J")
-		args = append(args, path.(string))
+		args = append(args, "-J", path.(string))
 	}
 
 	return &providerConfig{

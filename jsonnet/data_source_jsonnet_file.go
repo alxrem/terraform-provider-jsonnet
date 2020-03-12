@@ -3,7 +3,9 @@ package jsonnet
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"os/exec"
 )
 
 func dataSourceJsonnetFile() *schema.Resource {
@@ -62,13 +64,15 @@ func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
 
 	stdout, err := command.Output()
 	if err != nil {
-		return err
+		exitError := err.(*exec.ExitError)
+		return fmt.Errorf(string(exitError.Stderr))
 	}
 
-	if err := d.Set("rendered", string(stdout)); err != nil {
+	rendered := string(stdout)
+	if err := d.Set("rendered", rendered); err != nil {
 		return err
 	}
-	d.SetId(hash(string(stdout)))
+	d.SetId(hash(rendered))
 
 	return nil
 }
