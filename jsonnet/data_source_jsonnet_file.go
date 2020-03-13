@@ -18,7 +18,6 @@ func dataSourceJsonnetFile() *schema.Resource {
 				Required:    true,
 				Description: "Source jsonnet file",
 			},
-			// TODO: validate variable names
 			"ext_str": {
 				Type:        schema.TypeMap,
 				Optional:    true,
