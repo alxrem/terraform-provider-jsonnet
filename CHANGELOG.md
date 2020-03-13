@@ -1,5 +1,11 @@
 ## 0.3.0 (Unreleased)
 
+## 0.2.2 (Mar 14, 2020)
+
+BUG FIXED:
+
+Usage of external variables don't distorts provider config.
+
 ## 0.2.1 (Mar 14, 2020)
 
 NOTES:
