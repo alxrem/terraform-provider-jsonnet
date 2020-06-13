@@ -1,10 +1,15 @@
-## 0.3.0 (Unreleased)
+## 1.0.0 (Jun 14, 2020)
+
+BREAKING CHANGES:
+
+`go-jsonnet` is used for generation json instead of `jsonnet` utility, therefore
+the parameter `jsonnet_bin` of provider was removed.
 
 ## 0.2.2 (Mar 14, 2020)
 
 BUG FIXED:
 
-Usage of external variables don't distorts provider config.
+Usage of external variables don't distort provider config.
 
 ## 0.2.1 (Mar 14, 2020)
 
@@ -17,7 +22,7 @@ NOTES:
 
 FEATURES:
 
-Supported external variables and top level arguments
+Supported external variables and top-level arguments
 
 IMPROVEMENTS:
 

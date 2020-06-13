@@ -21,8 +21,6 @@ rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](ht
 
 ## Jsonnet Provider
 
-Provider requires [Jsonnet interpreter](https://github.com/google/jsonnet/releases) installed.
-
 ### Example Usage
 
 ```hcl-terraform
@@ -44,10 +42,8 @@ resource "grafana_dashboard" "service_overview" {
 
 ### Argument Reference
 
-The following arguments are supported in the provider block:
+The following argument is supported in the provider block:
 
-* `jsonnet_bin` &mdash; (Optional) Path to the jsonnet interpreter binary. Default value is `jsonnet`, so plugin
-  just locates interpreter using `$PATH` environment variable.
 * `jsonnet_path` &mdash; (Optional) Array of paths used to search additional Jsonnet libraries.
 
 ## jsonnet_file data source
@@ -63,9 +59,9 @@ data "jsonnet_file" "dashboard" {
     }
 
     ext_code = {
-        installations = jsonencode(var.installations) 
+        installations = jsonencode(var.installations)
     }
-    
+
     tla_str = {
         description = "My service"
     }
@@ -73,16 +69,16 @@ data "jsonnet_file" "dashboard" {
     source = "${root.module}/jsonnet/dashboard.jsonnet"
 }
 ```
- 
+
 ### Argument Reference
 
 The following arguments are supported:
 
 * `source` &mdash; (Required) Path to the Jsonnet template file.
-* `ext_str` &mdash; (Optional) Map of string for passing to the interpreter as external variables. 
+* `ext_str` &mdash; (Optional) Map of string for passing to the interpreter as external variables.
 * `ext_code` &mdash; (Optional) Map of string representing a Jsonnet code for passing to the interpreter
                                 as external variables.
-* `tla_str` &mdash; (Optional) Map of string for passing to the interpreter as top level argument. 
+* `tla_str` &mdash; (Optional) Map of string for passing to the interpreter as top level argument.
 * `tla_code` &mdash; (Optional) Map of string representing a Jsonnet code for passing to the interpreter
                                 as top-level argument.
 
