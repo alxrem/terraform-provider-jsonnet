@@ -1,7 +1,7 @@
 provider "jsonnet" {
   jsonnet_path = ["./lib/"]
 
-  version = "~> 0.2"
+  version = "~> 1.0"
 }
 
 data "jsonnet_file" "template" {
