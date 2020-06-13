@@ -3,9 +3,9 @@ package jsonnet
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
+	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"os/exec"
+	"io/ioutil"
 )
 
 func dataSourceJsonnetFile() *schema.Resource {
@@ -55,23 +55,37 @@ func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
 	config := m.(*providerConfig)
 
 	source := d.Get("source").(string)
-	extStr := d.Get("ext_str").(map[string]interface{})
-	extCode := d.Get("ext_code").(map[string]interface{})
-	tlaStr := d.Get("tla_str").(map[string]interface{})
-	tlaCode := d.Get("tla_code").(map[string]interface{})
-	command := config.command(source, extStr, extCode, tlaStr, tlaCode)
 
-	stdout, err := command.Output()
-	if err != nil {
-		exitError := err.(*exec.ExitError)
-		return fmt.Errorf(string(exitError.Stderr))
+	vm := jsonnet.MakeVM()
+	vm.Importer(config.importer)
+
+	for name, value := range d.Get("ext_str").(map[string]interface{}) {
+		vm.ExtVar(name, value.(string))
+	}
+	for name, value := range d.Get("ext_code").(map[string]interface{}) {
+		vm.ExtCode(name, value.(string))
+	}
+	for name, value := range d.Get("tla_str").(map[string]interface{}) {
+		vm.TLAVar(name, value.(string))
+	}
+	for name, value := range d.Get("tla_code").(map[string]interface{}) {
+		vm.TLACode(name, value.(string))
 	}
 
-	rendered := string(stdout)
-	if err := d.Set("rendered", rendered); err != nil {
+	snippet, err := ioutil.ReadFile(source)
+	if err != nil {
 		return err
 	}
-	d.SetId(hash(rendered))
+
+	output, err := vm.EvaluateSnippet(source, string(snippet))
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("rendered", output); err != nil {
+		return err
+	}
+	d.SetId(hash(output))
 
 	return nil
 }

@@ -1,10 +1,9 @@
 package jsonnet
 
 import (
+	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"os"
-	"os/exec"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -17,11 +16,6 @@ func Provider() terraform.ResourceProvider {
 					Type: schema.TypeString,
 				},
 			},
-			"jsonnet_bin": {
-				Type:     schema.TypeString,
-				Default:  "jsonnet",
-				Optional: true,
-			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"jsonnet_file": dataSourceJsonnetFile(),
@@ -31,44 +25,17 @@ func Provider() terraform.ResourceProvider {
 }
 
 type providerConfig struct {
-	cmd  string
-	args []string
-}
-
-func (pc *providerConfig) command(source string, extStr, extCode, tlaStr, tlaCode map[string]interface{}) *exec.Cmd {
-	args := pc.args[:]
-	for argKey, vars := range map[string]map[string]interface{}{
-		"--ext-str":  extStr,
-		"--ext-code": extCode,
-		"--tla-str":  tlaStr,
-		"--tla-code": tlaCode,
-	} {
-		for k, v := range vars {
-			args = append(args, argKey, k+"="+v.(string))
-		}
-	}
-
-	cmd := exec.Command(pc.cmd, append(args, source)...)
-	cmd.Env = os.Environ()
-	return cmd
+	importer jsonnet.Importer
 }
 
 func configureProvider(d *schema.ResourceData) (interface{}, error) {
-	jsonnetBin := d.Get("jsonnet_bin").(string)
-
-	cmd, err := exec.LookPath(jsonnetBin)
-	if err != nil {
-		return nil, err
-	}
-
 	jsonnetPath := d.Get("jsonnet_path").([]interface{})
-	args := make([]string, 0)
-	for _, path := range jsonnetPath {
-		args = append(args, "-J", path.(string))
+	jpaths := make([]string, len(jsonnetPath))
+	for i, path := range jsonnetPath {
+		jpaths[i] = path.(string)
 	}
 
 	return &providerConfig{
-		cmd:  cmd,
-		args: args,
+		importer: &jsonnet.FileImporter{JPaths: jpaths},
 	}, nil
 }
