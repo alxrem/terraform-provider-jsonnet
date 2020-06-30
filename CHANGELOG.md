@@ -1,3 +1,11 @@
+## 1.1.0 (Unreleased)
+
+## 1.0.1 (Jun 30, 2020)
+
+NOTES:
+
+Added provider documentation to be published on Terraform Registry.
+
 ## 1.0.0 (Jun 14, 2020)
 
 BREAKING CHANGES:
