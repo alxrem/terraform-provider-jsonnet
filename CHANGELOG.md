@@ -1,5 +1,11 @@
 ## 1.1.0 (Unreleased)
 
+## 1.0.2 (Dec 23, 2020)
+
+NOTES:
+
+Upgrade go-jsonnet to 0.17.0 
+
 ## 1.0.1 (Jun 30, 2020)
 
 NOTES:
