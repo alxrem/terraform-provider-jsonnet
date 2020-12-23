@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"io/ioutil"
 )
 
 func dataSourceJsonnetFile() *schema.Resource {
@@ -72,12 +71,7 @@ func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
 		vm.TLACode(name, value.(string))
 	}
 
-	snippet, err := ioutil.ReadFile(source)
-	if err != nil {
-		return err
-	}
-
-	output, err := vm.EvaluateSnippet(source, string(snippet))
+	output, err := vm.EvaluateFile(source)
 	if err != nil {
 		return err
 	}
