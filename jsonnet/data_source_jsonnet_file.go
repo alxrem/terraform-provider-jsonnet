@@ -56,7 +56,7 @@ func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
 	source := d.Get("source").(string)
 
 	vm := jsonnet.MakeVM()
-	vm.Importer(config.importer)
+	vm.Importer(&jsonnet.FileImporter{JPaths: config.jpaths})
 
 	for name, value := range d.Get("ext_str").(map[string]interface{}) {
 		vm.ExtVar(name, value.(string))

@@ -1,5 +1,11 @@
 ## 1.1.0 (Unreleased)
 
+## 1.0.3 (Dec 25, 2020)
+
+BUG FIXED:
+
+Fixed concurrency issues caused by shared FileImporter.
+
 ## 1.0.2 (Dec 23, 2020)
 
 NOTES:

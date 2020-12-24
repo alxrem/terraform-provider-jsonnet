@@ -1,7 +1,6 @@
 package jsonnet
 
 import (
-	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -25,17 +24,17 @@ func Provider() terraform.ResourceProvider {
 }
 
 type providerConfig struct {
-	importer jsonnet.Importer
+	jpaths []string
 }
 
 func configureProvider(d *schema.ResourceData) (interface{}, error) {
 	jsonnetPath := d.Get("jsonnet_path").([]interface{})
-	jpaths := make([]string, len(jsonnetPath))
+	config := &providerConfig{
+		jpaths: make([]string, len(jsonnetPath)),
+	}
 	for i, path := range jsonnetPath {
-		jpaths[i] = path.(string)
+		config.jpaths[i] = path.(string)
 	}
 
-	return &providerConfig{
-		importer: &jsonnet.FileImporter{JPaths: jpaths},
-	}, nil
+	return config, nil
 }

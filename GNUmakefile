@@ -9,6 +9,9 @@ $(BINARY): $(SOURCES)
 test: $(SOURCES)
 	go test ./...
 
+clean:
+	rm -f $(BINARY)
+
 release:
 	goreleaser release --rm-dist
 
