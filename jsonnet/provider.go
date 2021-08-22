@@ -1,11 +1,12 @@
 package jsonnet
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"jsonnet_path": {
@@ -19,7 +20,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"jsonnet_file": dataSourceJsonnetFile(),
 		},
-		ConfigureFunc: configureProvider,
+		ConfigureContextFunc: configureProvider,
 	}
 }
 
@@ -27,7 +28,7 @@ type providerConfig struct {
 	jpaths []string
 }
 
-func configureProvider(d *schema.ResourceData) (interface{}, error) {
+func configureProvider(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	jsonnetPath := d.Get("jsonnet_path").([]interface{})
 	config := &providerConfig{
 		jpaths: make([]string, len(jsonnetPath)),

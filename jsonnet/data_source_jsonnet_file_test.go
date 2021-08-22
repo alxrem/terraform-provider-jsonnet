@@ -2,15 +2,18 @@ package jsonnet
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"io/ioutil"
 	"os"
 	"testing"
 )
 
-var testProviders = map[string]terraform.ResourceProvider{
-	"jsonnet": Provider(),
+var testProviderFactories = map[string]func() (*schema.Provider, error){
+	"jsonnet": func() (*schema.Provider, error) {
+		return Provider(), nil
+	},
 }
 
 func TestJsonnetRendering(t *testing.T) {
@@ -109,7 +112,7 @@ output "rendered" {
 			}
 
 			resource.UnitTest(t, resource.TestCase{
-				Providers: testProviders,
+				ProviderFactories: testProviderFactories,
 				Steps: []resource.TestStep{
 					{
 						Config: fmt.Sprintf(tt.manifest, templateFile.Name()),

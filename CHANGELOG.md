@@ -1,4 +1,8 @@
-## 1.1.0 (Unreleased)
+## 2.0.0 (Unreleased)
+
+BREAKING CHANGES:
+
+Provider migrated to Terraform Plugin SDKv2.
 
 ## 1.0.3 (Dec 25, 2020)
 

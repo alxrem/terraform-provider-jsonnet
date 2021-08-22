@@ -1,15 +1,17 @@
 package jsonnet
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/google/go-jsonnet"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceJsonnetFile() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceJsonnetFileRead,
+		ReadContext: dataSourceJsonnetFileRead,
 
 		Schema: map[string]*schema.Schema{
 			"source": {
@@ -50,7 +52,7 @@ func dataSourceJsonnetFile() *schema.Resource {
 	}
 }
 
-func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceJsonnetFileRead(_ context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	config := m.(*providerConfig)
 
 	source := d.Get("source").(string)
@@ -73,11 +75,11 @@ func dataSourceJsonnetFileRead(d *schema.ResourceData, m interface{}) error {
 
 	output, err := vm.EvaluateFile(source)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	if err := d.Set("rendered", output); err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 	d.SetId(hash(output))
 
