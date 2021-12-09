@@ -8,7 +8,7 @@ rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](ht
 ```hcl-terraform
 # Configure Jsonnet provider
 provider "jsonnet" {
-    jsonnet_path = ["${root.module}/jsonnet/grafonnet-lib"]
+    jsonnet_path = "${root.module}/lib:/usr/local/share/jsonnet/grafonnet-lib"
 }
 
 # Template of Grafana dashboard
@@ -26,4 +26,5 @@ resource "grafana_dashboard" "service_overview" {
 
 The following argument is supported in the provider block:
 
-* `jsonnet_path` &mdash; (Optional) Array of paths used to search additional Jsonnet libraries.
+* `jsonnet_path` &mdash; (Optional, string) Paths used to search additional Jsonnet libraries. Multiple paths are separated
+  by colons. Can be specified by `JSONNET_PATH` environment variable.

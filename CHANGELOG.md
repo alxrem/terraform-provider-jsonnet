@@ -2,7 +2,12 @@
 
 BREAKING CHANGES:
 
-Provider migrated to Terraform Plugin SDKv2.
+* Provider migrated to Terraform Plugin SDKv2.
+* Type of jsonnet_path changed from list to string. 
+
+IMPROVEMENTS:
+
+* Provider can be configured by `JSONNET_PATH` environment variable.
 
 ## 1.0.3 (Dec 25, 2020)
 
