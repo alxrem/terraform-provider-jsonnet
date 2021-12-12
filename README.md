@@ -3,6 +3,21 @@
 Terraform provider for generating JSON documents from [Jsonnet](https://jsonnet.org/) templates. It initially aimed to
 rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](https://github.com/grafana/grafonnet-lib).
 
+## Migration 1.x -> 2.0.0
+
+In versions 1.x parameter `jsonnet_path` of provider was of type **list**.
+Starting from version 2.0.0 path to jsonnet libraries must be prepresented
+as strings with the paths divided by colon as in shell `PATH` variable.
+
+The easiest way to migrate provider definition to 2.x is to use `join` function i.e
+
+```
+ provider "jsonnet" {
+-  jsonnet_path = ["${path.module}/jsonnet", "${path.module}/jsonnet/grafonnet-lib"]
++  jsonnet_path = join(":", ["${path.module}/jsonnet", "${path.module}/jsonnet/grafonnet-lib"])
+ }
+```
+
 ## Installation
 
 ### terraform 0.13+

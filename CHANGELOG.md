@@ -1,4 +1,4 @@
-## 2.0.0 (Unreleased)
+## 2.0.0 (Dec 12, 2021)
 
 BREAKING CHANGES:
 
