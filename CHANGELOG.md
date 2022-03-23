@@ -1,3 +1,10 @@
+## 2.0.1 (Mar 23, 2022)
+
+NOTES:
+
+* Upgrade go to 1.17
+* Upgrade go-jsonnet to 0.18.0
+
 ## 2.0.0 (Dec 12, 2021)
 
 BREAKING CHANGES:
