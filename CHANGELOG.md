@@ -1,3 +1,10 @@
+## 2.1.0 (Mar 23, 2022)
+
+IMPROVEMENTS:
+
+* Upgraded go-jsonnet to 0.17.0
+* Used go 1.17 to build provider
+
 ## 2.0.0 (Dec 12, 2021)
 
 BREAKING CHANGES:
