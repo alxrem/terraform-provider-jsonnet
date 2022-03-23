@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"gitlab.com/alxrem/terraform-provider-jsonnet/jsonnet"
+	"gitlab.com/peikk0/terraform-provider-jsonnet/jsonnet"
 )
 
 func main() {

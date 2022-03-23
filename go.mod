@@ -1,4 +1,4 @@
-module gitlab.com/alxrem/terraform-provider-jsonnet
+module gitlab.com/peikk0/terraform-provider-jsonnet
 
 go 1.16
 

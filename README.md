@@ -3,6 +3,8 @@
 Terraform provider for generating JSON documents from [Jsonnet](https://jsonnet.org/) templates. It initially aimed to
 rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](https://github.com/grafana/grafonnet-lib).
 
+This is a fork of https://github.com/alxrem/terraform-provider-jsonnet
+
 ## Migration 1.x -> 2.0.0
 
 In versions 1.x parameter `jsonnet_path` of provider was of type **list**.
@@ -28,7 +30,7 @@ Add into your Terraform configuration this code:
 terraform {
   required_providers {
     jsonnet = {
-      source = "alxrem/jsonnet"
+      source = "peikk0/jsonnet"
     }
   }
 }
@@ -39,7 +41,7 @@ and run `terraform init`
 ### terraform 0.12 and earlier
 
 1. Download archive with the latest version of provider for your operating system from
-   [Github releases page](https://github.com/alxrem/terraform-provider-jsonnet/releases).
+   [Github releases page](https://github.com/peikk0/terraform-provider-jsonnet/releases).
 2. Unpack provider to `$HOME/.terraform.d/plugins`, i.e.
    ```
    unzip terraform-provider-jsonnet_vX.Y.Z_linux_amd64.zip terraform-provider-jsonnet_* -d $HOME/.terraform.d/plugins/
@@ -51,4 +53,4 @@ and run `terraform init`
 
 ## Usage
 
-Read the [documentation on Terraform Registry site](https://registry.terraform.io/providers/alxrem/jsonnet/latest/docs).
+Read the [documentation on Terraform Registry site](https://registry.terraform.io/providers/peikk0/jsonnet/latest/docs).
