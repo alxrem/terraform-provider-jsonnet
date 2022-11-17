@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"strings"
+
 	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +20,12 @@ func dataSourceJsonnetFile() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Source jsonnet file",
+			},
+			"jsonnet_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "Additional directories to prepend to the Jsonnet load path",
 			},
 			"ext_str": {
 				Type:        schema.TypeMap,
@@ -57,8 +65,14 @@ func dataSourceJsonnetFileRead(_ context.Context, d *schema.ResourceData, m inte
 
 	source := d.Get("source").(string)
 
+	jpaths := []string{}
+	jsonnetPath := d.Get("jsonnet_path").(string)
+	if jsonnetPath != "" {
+		jpaths = strings.Split(jsonnetPath, ":")
+	}
+
 	vm := jsonnet.MakeVM()
-	vm.Importer(&jsonnet.FileImporter{JPaths: config.jpaths})
+	vm.Importer(&jsonnet.FileImporter{JPaths: append(jpaths, config.jpaths...)})
 
 	for name, value := range d.Get("ext_str").(map[string]interface{}) {
 		vm.ExtVar(name, value.(string))

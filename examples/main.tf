@@ -1,11 +1,18 @@
-provider "jsonnet" {
-  jsonnet_path = ["./lib/"]
+terraform {
+  required_providers {
+    jsonnet = {
+      source  = "alxrem/jsonnet"
+      version = "~> 1.0"
+    }
+  }
+}
 
-  version = "~> 1.0"
+provider "jsonnet" {
+  jsonnet_path = "./lib/"
 }
 
 data "jsonnet_file" "template" {
-  ext_str  = {
+  ext_str = {
     hello = "from external string"
   }
 
@@ -28,10 +35,19 @@ data "jsonnet_file" "tla" {
   source = "tla.jsonnet"
 }
 
+data "jsonnet_file" "extra_paths" {
+  source       = "extra_paths.jsonnet"
+  jsonnet_path = "./lib-extra"
+}
+
 output "example" {
   value = data.jsonnet_file.template.rendered
 }
 
 output "tla" {
   value = data.jsonnet_file.tla.rendered
+}
+
+output "extra_paths" {
+  value = data.jsonnet_file.extra_paths.rendered
 }
