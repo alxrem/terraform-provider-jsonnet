@@ -97,6 +97,29 @@ output "rendered" {
    "sayAgain": "6"
 }
 `},
+		{
+			name: "string_output",
+			manifest: `
+data "jsonnet_file" "template" {
+  tla_code = {
+    vars = jsonencode({
+      foo = "bar"
+      bar = "baz"
+    })
+  }
+  string_output = true
+  source = "%s"
+}
+
+output "rendered" {
+  value = data.jsonnet_file.template.rendered
+}
+`,
+			template: `function(vars)
+  std.lines(["%s=%s" % [k, std.escapeStringBash(vars[k])] for k in std.objectFields(vars)])
+`,
+			want: "bar='baz'\nfoo='bar'\n\n",
+		},
 	}
 
 	for _, tt := range cases {
