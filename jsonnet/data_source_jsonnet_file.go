@@ -43,6 +43,12 @@ func dataSourceJsonnetFile() *schema.Resource {
 				Default:     make(map[string]interface{}),
 				Description: "Top-level arguments providing value as a code",
 			},
+			"string_output": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "When rendering a textual manifest, does not convert to a json string",
+			},
 			"rendered": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -60,6 +66,9 @@ func dataSourceJsonnetFileRead(_ context.Context, d *schema.ResourceData, m inte
 	vm := jsonnet.MakeVM()
 	vm.Importer(&jsonnet.FileImporter{JPaths: config.jpaths})
 
+	if d.Get("string_output").(bool) {
+		vm.StringOutput = true
+	}
 	for name, value := range d.Get("ext_str").(map[string]interface{}) {
 		vm.ExtVar(name, value.(string))
 	}
