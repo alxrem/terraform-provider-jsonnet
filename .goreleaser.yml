@@ -28,7 +28,7 @@ signs:
   - artifacts: checksum
     args:
       - "--local-user"
-      - "33AE03922AF08C07F99B75A4A3757AAA603E86D2" # Replace this with your GPG signing key ID
+      - "671101FF967104AAB109C63FAD5A643EA507ECC3" # Replace this with your GPG signing key ID
       - "--output"
       - "${signature}"
       - "--detach-sign"

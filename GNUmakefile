@@ -7,7 +7,7 @@ $(BINARY): $(SOURCES)
 	go build -o $(BINARY)
 
 test: $(SOURCES)
-	go test ./...
+	go test -v ./...
 
 clean:
 	rm -f $(BINARY)
@@ -15,4 +15,4 @@ clean:
 release:
 	goreleaser release --rm-dist
 
-.PHONY: test release
+.PHONY: test release clean
