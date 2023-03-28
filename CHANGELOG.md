@@ -1,3 +1,15 @@
+## 2.2.0 (Mar 28, 2023)
+
+IMPROVEMENTS:
+
+* Added `string_output` attribute
+* Upgraded go-jsonnet to 0.19.1
+
+NOTES:
+
+* Used go 1.19 to build provider
+
+
 ## 2.1.0 (Mar 23, 2022)
 
 IMPROVEMENTS:

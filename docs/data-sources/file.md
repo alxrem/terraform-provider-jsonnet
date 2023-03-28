@@ -33,6 +33,8 @@ The following arguments are supported:
 * `tla_str` &mdash; (Optional) Map of string for passing to the interpreter as top level argument.
 * `tla_code` &mdash; (Optional) Map of string representing a Jsonnet code for passing to the interpreter
                                 as top-level argument.
+* `string_output` &mdash; (Optional) When rendering a textual manifest, does not convert to a json string;
+                                     "false" by default.
 
 ## Attributes Reference
 
