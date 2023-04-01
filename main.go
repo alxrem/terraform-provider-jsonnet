@@ -1,11 +1,16 @@
 package main
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"gitlab.com/alxrem/terraform-provider-jsonnet/jsonnet"
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+	"gitlab.com/alxrem/terraform-provider-jsonnet/private/provider"
+	"log"
 )
 
 func main() {
-	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: jsonnet.Provider})
+	if err := providerserver.Serve(context.Background(), provider.New, providerserver.ServeOpts{
+		Address: "registry.terraform.io/alxrem/jsonnet",
+	}); err != nil {
+		log.Fatal(err)
+	}
 }
