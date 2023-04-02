@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"os"
 	"path"
 	"regexp"
 	"runtime"
@@ -160,6 +161,54 @@ func TestDataSourceJsonnetFile_RenderContentToString(t *testing.T) {
 					}
 				`,
 				Check: resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", "bar='baz'\nfoo='bar'\n\n"),
+			},
+		},
+	})
+}
+
+func TestDataSourceJsonnetFile_RenderWithDefaultJPath(t *testing.T) {
+	expected := `{
+   "data": "from global library"
+}
+`
+	resource.UnitTest(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck: func() {
+			_ = os.Setenv("JSONNET_PATH", "tests/global_libs")
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					data "jsonnet_file" "template" {
+						source = "` + testsDir + `/import.jsonnet"
+					}
+				`,
+				Check: resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", expected),
+			},
+		},
+	})
+	_ = os.Setenv("JSONNET_PATH", "global_libs")
+}
+
+func TestDataSourceJsonnetFile_RenderWithLocalJPath(t *testing.T) {
+	expected := `{
+   "data": "from local library"
+}
+`
+	resource.UnitTest(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		PreCheck: func() {
+			_ = os.Setenv("JSONNET_PATH", "tests/global_libs")
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					data "jsonnet_file" "template" {
+						jsonnet_path = "tests/local_libs"
+						source = "` + testsDir + `/import.jsonnet"
+					}
+				`,
+				Check: resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", expected),
 			},
 		},
 	})

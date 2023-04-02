@@ -1,0 +1,3 @@
+{
+  data: 'from global library'
+}

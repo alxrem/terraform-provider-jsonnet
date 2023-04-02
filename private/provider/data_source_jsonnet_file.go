@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"strings"
 )
 
 var _ datasource.DataSource = &JsonnetFileDataSource{}
@@ -42,6 +43,7 @@ func NewJsonnetFileDataSource() datasource.DataSource {
 
 type JsonnetFileDataSourceModel struct {
 	Id           types.String `tfsdk:"id"`
+	JsonnetPath  types.String `tfsdk:"jsonnet_path"`
 	Source       types.String `tfsdk:"source"`
 	Content      types.String `tfsdk:"content"`
 	ExtStr       types.Map    `tfsdk:"ext_str"`
@@ -61,6 +63,11 @@ func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed: true,
+			},
+			"jsonnet_path": schema.StringAttribute{
+				Optional: true,
+				MarkdownDescription: "Paths used to search additional Jsonnet libraries. " +
+					"Overrides paths from provider config.",
 			},
 			"source": schema.StringAttribute{
 				Optional:            true,
@@ -132,14 +139,6 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	vm.StringOutput = state.StringOutput.ValueBool()
 
-	if state.Source.IsNull() {
-		vm.Importer(&jsonnet.MemoryImporter{Data: map[string]jsonnet.Contents{
-			"data": jsonnet.MakeContents(state.Content.ValueString()),
-		}})
-	} else {
-		vm.Importer(&jsonnet.FileImporter{JPaths: d.defaultJsonnetPaths})
-	}
-
 	rendered, err := func() (string, error) {
 		if state.Source.IsNull() {
 			vm.Importer(&jsonnet.MemoryImporter{Data: map[string]jsonnet.Contents{
@@ -147,7 +146,13 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 			}})
 			return vm.EvaluateAnonymousSnippet("data", state.Content.ValueString())
 		} else {
-			vm.Importer(&jsonnet.FileImporter{JPaths: d.defaultJsonnetPaths})
+			var jPaths []string
+			if state.JsonnetPath.IsNull() {
+				jPaths = d.defaultJsonnetPaths
+			} else {
+				jPaths = strings.Split(state.JsonnetPath.ValueString(), ":")
+			}
+			vm.Importer(&jsonnet.FileImporter{JPaths: jPaths})
 			return vm.EvaluateFile(state.Source.ValueString())
 		}
 	}()
