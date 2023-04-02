@@ -5,16 +5,28 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/google/go-jsonnet"
+	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 var _ datasource.DataSource = &JsonnetFileDataSource{}
 var _ datasource.DataSourceWithConfigure = &JsonnetFileDataSource{}
+var _ datasource.DataSourceWithConfigValidators = &JsonnetFileDataSource{}
 
 type JsonnetFileDataSource struct {
 	defaultJsonnetPaths []string
+}
+
+func (d *JsonnetFileDataSource) ConfigValidators(_ context.Context) []datasource.ConfigValidator {
+	return []datasource.ConfigValidator{
+		datasourcevalidator.ExactlyOneOf(
+			path.MatchRoot("content"),
+			path.MatchRoot("source"),
+		),
+	}
 }
 
 func (d *JsonnetFileDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
@@ -31,6 +43,7 @@ func NewJsonnetFileDataSource() datasource.DataSource {
 type JsonnetFileDataSourceModel struct {
 	Id           types.String `tfsdk:"id"`
 	Source       types.String `tfsdk:"source"`
+	Content      types.String `tfsdk:"content"`
 	ExtStr       types.Map    `tfsdk:"ext_str"`
 	ExtCode      types.Map    `tfsdk:"ext_code"`
 	TlaStr       types.Map    `tfsdk:"tla_str"`
@@ -50,8 +63,12 @@ func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 				Computed: true,
 			},
 			"source": schema.StringAttribute{
-				Required:            true,
+				Optional:            true,
 				MarkdownDescription: "Path to the Jsonnet template file.",
+			},
+			"content": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Jsonnet template.",
 			},
 			"ext_str": schema.MapAttribute{
 				ElementType:         types.StringType,
@@ -94,7 +111,6 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 	}
 
 	vm := jsonnet.MakeVM()
-	vm.Importer(&jsonnet.FileImporter{JPaths: d.defaultJsonnetPaths})
 
 	for _, attr := range []struct {
 		m types.Map
@@ -116,7 +132,26 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	vm.StringOutput = state.StringOutput.ValueBool()
 
-	rendered, err := vm.EvaluateFile(state.Source.ValueString())
+	if state.Source.IsNull() {
+		vm.Importer(&jsonnet.MemoryImporter{Data: map[string]jsonnet.Contents{
+			"data": jsonnet.MakeContents(state.Content.ValueString()),
+		}})
+	} else {
+		vm.Importer(&jsonnet.FileImporter{JPaths: d.defaultJsonnetPaths})
+	}
+
+	rendered, err := func() (string, error) {
+		if state.Source.IsNull() {
+			vm.Importer(&jsonnet.MemoryImporter{Data: map[string]jsonnet.Contents{
+				"data": jsonnet.MakeContents(state.Content.ValueString()),
+			}})
+			return vm.EvaluateAnonymousSnippet("data", state.Content.ValueString())
+		} else {
+			vm.Importer(&jsonnet.FileImporter{JPaths: d.defaultJsonnetPaths})
+			return vm.EvaluateFile(state.Source.ValueString())
+		}
+	}()
+
 	if err != nil {
 		resp.Diagnostics.AddError("Failed to render test from jsonnet template", err.Error())
 		return

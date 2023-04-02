@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/google/go-jsonnet v0.19.1
 	github.com/hashicorp/terraform-plugin-framework v1.2.0
+	github.com/hashicorp/terraform-plugin-framework-validators v0.10.0
 	github.com/hashicorp/terraform-plugin-go v0.14.3
 	github.com/hashicorp/terraform-plugin-testing v1.2.0
 )
