@@ -1,3 +1,14 @@
+## 2.3.0 (Nov 4, 2023)
+
+IMPROVEMENTS:
+
+* Added `jsonnet_path` attribute of data source.
+* Upgraded go-jsonnet to 0.20.0
+
+NOTES:
+
+* Used go-1.21 to build provider.
+
 ## 2.2.0 (Mar 28, 2023)
 
 IMPROVEMENTS:
@@ -7,7 +18,7 @@ IMPROVEMENTS:
 
 NOTES:
 
-* Used go 1.19 to build provider
+* Used go-1.19 to build provider
 
 
 ## 2.1.0 (Mar 23, 2022)
@@ -15,7 +26,7 @@ NOTES:
 IMPROVEMENTS:
 
 * Upgraded go-jsonnet to 0.17.0
-* Used go 1.17 to build provider
+* Used go-1.17 to build provider
 
 ## 2.0.0 (Dec 12, 2021)
 
