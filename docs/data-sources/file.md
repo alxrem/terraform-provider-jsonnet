@@ -14,6 +14,9 @@ The `jsonnet_file` data source renders a JSON document from a Jsonnet template f
 
 ```terraform
 data "jsonnet_file" "dashboard" {
+  jsonnet_path = "${root.module}/jsonnet/lib"
+  source       = "${root.module}/jsonnet/dashboard.jsonnet"
+
   ext_str = {
     service = "my_service"
   }
@@ -25,8 +28,6 @@ data "jsonnet_file" "dashboard" {
   tla_str = {
     description = "My service"
   }
-
-  source = "${root.module}/jsonnet/dashboard.jsonnet"
 }
 ```
 
