@@ -30,6 +30,8 @@ func (p *JsonnetProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *JsonnetProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: `Terraform provider for generating JSON documents from [Jsonnet](https://jsonnet.org/) templates. It initially aimed to
+rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](https://github.com/grafana/grafonnet-lib).`,
 		Attributes: map[string]schema.Attribute{
 			"jsonnet_path": schema.StringAttribute{
 				Optional: true,

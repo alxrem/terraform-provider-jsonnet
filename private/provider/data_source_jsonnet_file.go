@@ -66,14 +66,14 @@ func (d *JsonnetFileDataSource) Metadata(_ context.Context, req datasource.Metad
 
 func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: "The `jsonnet_file` data source renders a JSON document from a Jsonnet template file.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed: true,
 			},
 			"jsonnet_path": schema.StringAttribute{
-				Optional: true,
-				MarkdownDescription: "Paths used to search additional Jsonnet libraries. " +
-					"Overrides paths from provider config.",
+				Optional:            true,
+				MarkdownDescription: "Paths used to search additional Jsonnet libraries. Multiple paths are separated by colons. Overrides value of `jsonnet_path` configured in provider.",
 			},
 			"source": schema.StringAttribute{
 				Optional:            true,
@@ -81,7 +81,7 @@ func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 			},
 			"content": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "Jsonnet template.",
+				MarkdownDescription: "Content of Jsonnet template.",
 			},
 			"ext_str": schema.MapAttribute{
 				ElementType:         types.StringType,
@@ -109,7 +109,7 @@ func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 			},
 			"rendered": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Rendered text.",
+				MarkdownDescription: "Rendered JSON document.",
 			},
 		},
 	}
