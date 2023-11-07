@@ -61,7 +61,7 @@ func (p *JsonnetProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if config.JsonnetPath.IsNull() {
 		jsonnetPath = os.Getenv("JSONNET_PATH")
 	} else {
-		jsonnetPath = config.JsonnetPath.String()
+		jsonnetPath = config.JsonnetPath.ValueString()
 	}
 
 	jsonnetPaths := strings.Split(jsonnetPath, ":")

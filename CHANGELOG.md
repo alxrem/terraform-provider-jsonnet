@@ -1,3 +1,9 @@
+## 2.3.1 (Nov 8, 2023)
+
+BUG FIXES:
+
+* Fixed processing of `jsonnet_path` provider attribute (fixes #9).
+
 ## 2.3.0 (Nov 4, 2023)
 
 IMPROVEMENTS:
@@ -20,7 +26,6 @@ NOTES:
 
 * Used go-1.19 to build provider
 
-
 ## 2.1.0 (Mar 23, 2022)
 
 IMPROVEMENTS:
@@ -41,7 +46,7 @@ IMPROVEMENTS:
 
 ## 1.0.3 (Dec 25, 2020)
 
-BUG FIXED:
+BUG FIXES:
 
 Fixed concurrency issues caused by shared FileImporter.
 
@@ -66,7 +71,7 @@ the parameter `jsonnet_bin` of provider was removed.
 
 ## 0.2.2 (Mar 14, 2020)
 
-BUG FIXED:
+BUG FIXES:
 
 Usage of external variables don't distort provider config.
 
