@@ -172,7 +172,7 @@ func TestDataSourceJsonnetFile_RenderContentToString(t *testing.T) {
 	})
 }
 
-func TestDataSourceJsonnetFile_RenderWithDefaultJPath(t *testing.T) {
+func TestDataSourceJsonnetFile_RenderContentWithDefaultJPath(t *testing.T) {
 	expected := `{
    "data": "from global library"
 }
@@ -186,7 +186,7 @@ func TestDataSourceJsonnetFile_RenderWithDefaultJPath(t *testing.T) {
 			{
 				Config: `
 					data "jsonnet_file" "template" {
-						source = "` + testsDir + `/import.jsonnet"
+						content = "import \"common.libsonnet\""
 					}
 				`,
 				Check: resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", expected),
@@ -196,7 +196,7 @@ func TestDataSourceJsonnetFile_RenderWithDefaultJPath(t *testing.T) {
 	_ = os.Setenv("JSONNET_PATH", "global_libs")
 }
 
-func TestDataSourceJsonnetFile_RenderWithLocalJPath(t *testing.T) {
+func TestDataSourceJsonnetFile_RenderFileWithLocalJPath(t *testing.T) {
 	expected := `{
    "data": "from local library"
 }

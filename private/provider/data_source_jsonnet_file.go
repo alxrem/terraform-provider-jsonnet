@@ -146,19 +146,19 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 	vm.StringOutput = state.StringOutput.ValueBool()
 
 	rendered, err := func() (string, error) {
+		var jPaths []string
+
+		if state.JsonnetPath.IsNull() {
+			jPaths = d.defaultJsonnetPaths
+		} else {
+			jPaths = strings.Split(state.JsonnetPath.ValueString(), ":")
+		}
+
+		vm.Importer(&jsonnet.FileImporter{JPaths: jPaths})
+
 		if state.Source.IsNull() {
-			vm.Importer(&jsonnet.MemoryImporter{Data: map[string]jsonnet.Contents{
-				"data": jsonnet.MakeContents(state.Content.ValueString()),
-			}})
 			return vm.EvaluateAnonymousSnippet("data", state.Content.ValueString())
 		} else {
-			var jPaths []string
-			if state.JsonnetPath.IsNull() {
-				jPaths = d.defaultJsonnetPaths
-			} else {
-				jPaths = strings.Split(state.JsonnetPath.ValueString(), ":")
-			}
-			vm.Importer(&jsonnet.FileImporter{JPaths: jPaths})
 			return vm.EvaluateFile(state.Source.ValueString())
 		}
 	}()

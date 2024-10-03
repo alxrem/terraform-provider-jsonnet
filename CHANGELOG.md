@@ -1,3 +1,9 @@
+## 2.3.2 (Oct 4, 2024)
+
+IMPROVEMENTS:
+
+* Added ability to import libraries from jsonnet snippets provided by `content` attribute (fixes #12).
+
 ## 2.3.1 (Nov 8, 2023)
 
 BUG FIXES:
