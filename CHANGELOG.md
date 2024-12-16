@@ -1,3 +1,9 @@
+## 2.4.0 (Dec 16, 2024)
+
+IMPROVEMENTS:
+
+* Added the `trace` attribute containing the outputs of std.trace() function (fixed #13).
+
 ## 2.3.2 (Oct 4, 2024)
 
 IMPROVEMENTS:

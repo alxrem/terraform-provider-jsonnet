@@ -10,13 +10,14 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"strings"
+
 	"github.com/google/go-jsonnet"
 	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"strings"
 )
 
 var _ datasource.DataSource = &JsonnetFileDataSource{}
@@ -58,6 +59,7 @@ type JsonnetFileDataSourceModel struct {
 	TlaCode      types.Map    `tfsdk:"tla_code"`
 	StringOutput types.Bool   `tfsdk:"string_output"`
 	Rendered     types.String `tfsdk:"rendered"`
+	Trace        types.String `tfsdk:"trace"`
 }
 
 func (d *JsonnetFileDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -111,6 +113,10 @@ func (d *JsonnetFileDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 				Computed:            true,
 				MarkdownDescription: "Rendered text.",
 			},
+			"trace": schema.StringAttribute{
+				Computed:            true,
+				MarkdownDescription: "Output of std.trace() function.",
+			},
 		},
 	}
 }
@@ -143,7 +149,10 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 		}
 	}
 
+	traceOut := strings.Builder{}
+
 	vm.StringOutput = state.StringOutput.ValueBool()
+	vm.SetTraceOut(&traceOut)
 
 	rendered, err := func() (string, error) {
 		var jPaths []string
@@ -169,6 +178,7 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 	}
 
 	state.Rendered = types.StringValue(rendered)
+	state.Trace = types.StringValue(traceOut.String())
 	state.Id = types.StringValue(hash(rendered))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)

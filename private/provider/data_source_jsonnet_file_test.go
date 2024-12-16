@@ -219,3 +219,45 @@ func TestDataSourceJsonnetFile_RenderFileWithLocalJPath(t *testing.T) {
 		},
 	})
 }
+
+func TestDataSourceJsonnetFile_RenderContentWithTrace(t *testing.T) {
+	expectedResult := `{
+   "a": "rest"
+}
+`
+	resource.UnitTest(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					data "jsonnet_file" "template" {
+						content = <<EOF
+						{
+							"a": std.trace("str", "rest")
+						}
+						EOF
+					}
+				`,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", expectedResult),
+					resource.TestCheckResourceAttr("data.jsonnet_file.template", "trace", "TRACE: data:2 str\n"),
+				),
+			},
+			{
+				Config: `
+					data "jsonnet_file" "template" {
+						content = <<EOF
+						{
+							"a": "rest"
+						}
+						EOF
+					}
+				`,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("data.jsonnet_file.template", "rendered", expectedResult),
+					resource.TestCheckResourceAttr("data.jsonnet_file.template", "trace", ""),
+				),
+			},
+		},
+	})
+}

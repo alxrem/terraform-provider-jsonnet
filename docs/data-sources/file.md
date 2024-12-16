@@ -47,3 +47,4 @@ Exactly one of `source` or `content` is required.
 The following attribute is exported:
 
 * `rendered` &mdash; Rendered JSON document.
+* `trace` &mdash; Output of std.trace() function.
