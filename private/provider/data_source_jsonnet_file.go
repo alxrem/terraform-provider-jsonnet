@@ -172,13 +172,18 @@ func (d *JsonnetFileDataSource) Read(ctx context.Context, req datasource.ReadReq
 		}
 	}()
 
+	trace := traceOut.String()
+
 	if err != nil {
-		resp.Diagnostics.AddError("Failed to render test from jsonnet template", err.Error())
+		resp.Diagnostics.AddError(
+			"Failed to render test from jsonnet template",
+			strings.Join([]string{err.Error(), trace}, ""),
+		)
 		return
 	}
 
 	state.Rendered = types.StringValue(rendered)
-	state.Trace = types.StringValue(traceOut.String())
+	state.Trace = types.StringValue(trace)
 	state.Id = types.StringValue(hash(rendered))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)

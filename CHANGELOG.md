@@ -1,3 +1,9 @@
+## 2.4.1 (Dec 17, 2024)
+
+IMPROVEMENTS:
+
+* Append outputs of std.trace() function to the error diagnostics.
+
 ## 2.4.0 (Dec 16, 2024)
 
 IMPROVEMENTS:

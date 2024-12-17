@@ -261,3 +261,24 @@ func TestDataSourceJsonnetFile_RenderContentWithTrace(t *testing.T) {
 		},
 	})
 }
+
+func TestDataSourceJsonnetFile_AddTraceToDiagnostics(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+					data "jsonnet_file" "template" {
+						content = <<EOF
+						{
+							"a": std.trace("str", "rest"),
+							"b": 1/0,
+						}
+						EOF
+					}
+				`,
+				ExpectError: regexp.MustCompile(`(?s)RUNTIME ERROR: Division by zero\..*TRACE: data:2 str`),
+			},
+		},
+	})
+}
