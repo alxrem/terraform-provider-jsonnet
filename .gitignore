@@ -2,3 +2,4 @@
 /vendor/
 /terraform-provider-jsonnet
 /dist/
+/docs-new/

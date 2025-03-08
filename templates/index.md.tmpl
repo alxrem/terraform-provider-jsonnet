@@ -1,0 +1,17 @@
+---
+page_title: "{{ .ProviderShortName | title }} Provider"
+subcategory: ""
+description: |-
+  Terraform provider for generating JSON documents from Jsonnet templates.
+---
+
+# {{ .ProviderShortName | title }} Provider
+
+Terraform provider for generating JSON documents from [Jsonnet](https://jsonnet.org/) templates. It initially aimed to
+rendering [Grafana](https://grafana.com) dashboards using [grafonnet library](https://github.com/grafana/grafonnet-lib).
+
+## Example Usage
+
+{{ tffile .ExampleFile }}
+
+{{ .SchemaMarkdown | trimspace }}

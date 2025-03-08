@@ -15,4 +15,7 @@ clean:
 release:
 	goreleaser release --rm-dist
 
-.PHONY: test release clean
+docs:
+	go tool tfplugindocs generate --rendered-website-dir docs-new
+
+.PHONY: test release clean docs
