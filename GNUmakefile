@@ -1,5 +1,5 @@
 BINARY := terraform-provider-jsonnet
-SOURCES := $(wildcard *.go) $(wildcard jsonnet/*.go)
+SOURCES := $(wildcard *.go) $(wildcard private/provider/*.go)
 
 default: test $(BINARY)
 
