@@ -1,6 +1,6 @@
 module gitlab.com/alxrem/terraform-provider-jsonnet
 
-go 1.23
+go 1.24
 
 require (
 	github.com/google/go-jsonnet v0.20.0
